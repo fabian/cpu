@@ -1,0 +1,110 @@
+html {
+	height: 100%;
+}
+
+body {
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0.002, rgb(46,50,51)), color-stop(0.5, rgb(88,96,99)), to(rgb(46,50,51)));
+	background-color: rgb(46,50,51);
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	font-size: 0.9em;
+	color: #fff;
+}
+
+.cpu:after {
+	content:"";
+	position:absolute;
+	z-index: -1;
+	top: 7px;
+	left: 7px;
+	right: 7px;
+	bottom: 7px;
+	border: 3px solid rgba(3, 32, 14, 0.6);
+}
+
+.cpu:before {
+	content:"";
+	position:absolute;
+	z-index: -1;
+	top: 10px;
+	left: 10px;
+	right: 10px;
+	border: 1px solid #65b985;
+	border-width: 1px 0 0 0;
+}
+
+.cpu {
+	position: absolute;
+	z-index: -2;
+	
+	left: 50%;
+	width: 580px;
+	margin-left: -300px;
+	
+	top: 50%;
+	height: 580px;
+	margin-top: -300px;
+	
+	-webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
+	background: -webkit-gradient(linear, left bottom, left top, from(rgb(12, 55, 28)), to(rgb(52,135,82)));
+	background-color: #348752;
+	
+	padding: 10px;
+}
+
+.cpu a {
+    color: #fff;    
+}
+
+.cpu em {
+	color: rgb(141, 187, 158);
+}
+
+.commands {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+.block {
+    clear: both;
+    border: 1px solid;
+    border-color: rgba(101, 185, 133, 0.2) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(101, 185, 133, 0.2);
+    padding: 20px 0 10px 20px;
+}
+
+.block h2,
+.block .titles {
+    float: left;
+    width: 88px;
+}
+
+.block .values {
+	overflow: auto;
+	width: 470px;
+}
+
+.values li {
+    font-family: "Andale Mono", monospace;
+}
+
+.block.info .values {
+    height: 45px;
+}
+
+.block.register .values {
+    height: 60px;
+}
+
+.block.instructions .values {
+    height: 125px;    
+}
+
+.block.memory .values {
+	height: 222px;
+}
+
+.block .instructions .active {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
