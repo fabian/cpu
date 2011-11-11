@@ -27,8 +27,17 @@ function bin2dec(n) {
     return n;
 }
 
-function dec2bin(n) {
-    return (n < 0 ? (0xFFFF + n + 1) : n).toString(2);
+function dec2bin(n, padding) {
+    
+    var bin = (n < 0 ? (0xFFFF + n + 1) : n).toString(2);
+    
+    padding = typeof (padding) === 'undefined' || padding === null ? padding = 16 : padding;
+    
+    while (bin.length < padding) {
+        bin = '0' + bin;
+    }
+    
+    return bin;
 }
 
 var CPU = function () {
