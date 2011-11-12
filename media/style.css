@@ -64,6 +64,8 @@ body {
     position: absolute;
     top: 30px;
     right: 30px;
+    text-align: right;
+    line-height: 1.6;
 }
 
 .block {
