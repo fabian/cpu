@@ -19,6 +19,13 @@
 		        
 		        return false;
 		    });
+		    
+		    $('.command-fast').on('click', function () {
+		        
+		        cpu.fast();
+		        
+		        return false;
+		    });
 		});
 	</script>
 </head>
@@ -28,7 +35,7 @@
     
     <div class="commands">
         <p><a href="#" class="command-load binary">Load Binary</a>, <a href="#" class="command-load decimal">Load Decimal</a>, <a href="#" class="command-load hex">Load Hex</a></p>
-        <p><a href="">Fast run</a>, <a href="">Slow run</a>, <a href="">Step</a></p>
+        <p><a href="#" class="command-fast">Fast run</a>, <a href="">Slow run</a>, <a href="">Step</a></p>
     </div>
     
     <div class="block info">
@@ -38,9 +45,9 @@
             <li>Count:</li>
         </ul>
         <ul class="values">
-            <li>120</li>
-            <li>0</li>
-            <li>9999</li>
+            <li class="ip">120</li>
+            <li class="carry">0</li>
+            <li class="count">9999</li>
         </ul>
     </div>
 

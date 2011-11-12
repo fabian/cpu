@@ -22,6 +22,18 @@ var INSTRUCTIONS = {
         execute: function (rnr, adr) {
             this.register[rnr] = bin2dec(this.memory[adr] + this.memory[adr + 1]);
         }
+    },
+    'ADDD': {
+        regex: '1([01]{15})',
+        bits: function (zahl) {
+            return '1' + dec2bin(zahl, 15);
+        },
+        optcode: function (zahl) {
+            return 'ADDD #' + zahl;
+        },
+        execute: function (zahl) {
+            this.register[0] += zahl;
+        }
     }
 };
 
@@ -63,27 +75,46 @@ function dec2bin(n, padding) {
 
 var CPU = function () {
     
-    this.register = [];
+    this.clear();
     
-    this.memory = [];
-    this.memory[003] = '01010101';
-    this.memory[004] = '10101010';
-    this.memory[100] = '00001110';
-    this.memory[101] = '10000000';
-    this.memory[102] = '01001100';
-    this.memory[103] = '00000011';
+    // Addition 3 + 6
+    var i = 100;
+    this.memory = this.empty();
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000';
+    this.memory[i++] = '10000000';
+    this.memory[i++] = '00000011';
+    this.memory[i++] = '10000000';
+    this.memory[i++] = '00000110';
+    
+    this.display();
+};
+
+CPU.prototype.reset = function () {
     
     this.position = 100;
+    this.count = 0;
+    this.carry = 0;
+};
+
+CPU.prototype.fast = function () {
+    
+    this.reset();
+    
+    var stop = false;
     
     // main loop
-    while (this.position < 104) {
+    while (!stop) {
         
-        this.decode(this.position).execute();
-        
+        var position = this.position;
         this.position = this.position + 2;
         
-        console.log(JSON.stringify(this.register));
+        stop = this.decode(this.position).execute();
+        
+        this.count++;
     }
+    
+    this.display();
 };
 
 CPU.prototype.decode = function (position) {
@@ -118,9 +149,10 @@ CPU.prototype.decode = function (position) {
         }
     }
     
+    // STOP
     return {
         execute: function () {
-            // do nothing
+            return true;
         },
         optcode: function () {
             return '';
@@ -128,12 +160,27 @@ CPU.prototype.decode = function (position) {
     }
 };
 
-CPU.prototype.load = function (empty, converter) {
+CPU.prototype.clear = function () {
+
+    this.register = [];
+    for (var i = 0; i < 4; i++) {
+        this.register[i] = 0;
+    }
+};
+
+CPU.prototype.empty = function () {
 
     var memory = [];
     for (var i = 1; i < 530; i++) {
         memory[i] = '00000000';
     }
+    
+    return memory;
+};
+
+CPU.prototype.load = function (empty, converter) {
+
+    var memory = this.empty();
 
     var instructions = prompt('Please paste instructions:', empty);
     memory = converter(memory, instructions, 100);
@@ -158,6 +205,17 @@ CPU.prototype.load = function (empty, converter) {
 };
 
 CPU.prototype.display = function () {
+
+    // Info
+    $('.info .ip').text(this.position);
+    $('.info .carry').text(this.carry);
+    $('.info .count').text(this.count);
+
+    // Register
+    $('.register .values').empty();
+    for (var i = 0; i < this.register.length; i++) {
+        $('.register .values').append('<li><em>R0' + i + '</em> ' + dec2bin(this.register[i]) + ' <em>' + this.register[i] + '</em></li>');
+    }
 
     // instructions
     $('.instructions .values').empty();
