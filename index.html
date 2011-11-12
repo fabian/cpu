@@ -14,24 +14,23 @@
 		    var cpu = new CPU();
 		    
 		    $('.command-load.binary').on('click', function () {
-		        
 		        cpu.load('00000000 00000000', parseBin);
-		        
 		        return false;
 		    });
 		    
 		    $('.command-fast').on('click', function () {
-		        
 		        cpu.fast();
-		        
+		        return false;
+		    });
+		    
+		    $('.command-slow').on('click', function () {
+		        cpu.slow();
 		        return false;
 		    });
 		    
 		    $('.command-step').on('click', function () {
-		    
 		        cpu.step();
 		        cpu.display();
-		        
 		        return false;
 		    });
 		});

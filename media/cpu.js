@@ -104,6 +104,21 @@ CPU.prototype.fast = function () {
     this.display();
 };
 
+CPU.prototype.slow = function () {
+    
+    // run instruction
+    var stop = this.step();
+    
+    this.display();
+    
+    if (!stop) {
+        var that = this;
+        setTimeout(function (that) {
+        	that.slow();
+        }, 500, this);
+    }
+};
+
 CPU.prototype.step = function () {
     
     var position = this.position;
