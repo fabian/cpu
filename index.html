@@ -26,6 +26,14 @@
 		        
 		        return false;
 		    });
+		    
+		    $('.command-step').on('click', function () {
+		    
+		        cpu.step();
+		        cpu.display();
+		        
+		        return false;
+		    });
 		});
 	</script>
 </head>
@@ -35,7 +43,7 @@
     
     <div class="commands">
         <p><a href="#" class="command-load binary">Load Binary</a>, <a href="#" class="command-load decimal">Load Decimal</a>, <a href="#" class="command-load hex">Load Hex</a></p>
-        <p><a href="#" class="command-fast">Fast run</a>, <a href="">Slow run</a>, <a href="">Step</a></p>
+        <p><a href="#" class="command-fast">Fast run</a>, <a href="#" class="command-slow">Slow run</a>, <a href="#" class="command-step">Step</a></p>
     </div>
     
     <div class="block info">

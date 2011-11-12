@@ -75,7 +75,7 @@ function dec2bin(n, padding) {
 
 var CPU = function () {
     
-    this.clear();
+    this.reset();
     
     // Addition 3 + 6
     var i = 100;
@@ -90,31 +90,30 @@ var CPU = function () {
     this.display();
 };
 
-CPU.prototype.reset = function () {
-    
-    this.position = 100;
-    this.count = 0;
-    this.carry = 0;
-};
-
 CPU.prototype.fast = function () {
-    
-    this.reset();
     
     var stop = false;
     
     // main loop
     while (!stop) {
         
-        var position = this.position;
-        this.position = this.position + 2;
-        
-        stop = this.decode(this.position).execute();
-        
-        this.count++;
+        // run instruction
+        stop = this.step();
     }
     
     this.display();
+};
+
+CPU.prototype.step = function () {
+    
+    var position = this.position;
+    this.position = this.position + 2;
+    
+    var stop = this.decode(this.position).execute();
+    
+    this.count++;
+    
+    return stop;
 };
 
 CPU.prototype.decode = function (position) {
@@ -128,8 +127,6 @@ CPU.prototype.decode = function (position) {
         // check if regex matches
         var match = bits.match(instruction.regex);
         if (match != null) {
-            
-            console.log(name);
             
             // convert to decimal
             var args = match.slice(1);
@@ -160,7 +157,11 @@ CPU.prototype.decode = function (position) {
     }
 };
 
-CPU.prototype.clear = function () {
+CPU.prototype.reset = function () {
+
+    this.position = 100;
+    this.count = 0;
+    this.carry = 0;
 
     this.register = [];
     for (var i = 0; i < 4; i++) {
@@ -220,7 +221,14 @@ CPU.prototype.display = function () {
     // instructions
     $('.instructions .values').empty();
     for (var i = 100; i < 500; i += 2) {
-        $('.instructions .values').append('<li><em>' + i + '</em> ' + this.memory[i] + ' ' + this.memory[i+1] + ' <em>' + this.decode(i).optcode() + '</em></li>');
+        
+        var li = $('<li><em>' + i + '</em> ' + this.memory[i] + ' ' + this.memory[i+1] + ' <em>' + this.decode(i).optcode() + '</em></li>');
+        
+        if (i == this.position) {
+            li.addClass('active');
+        }
+        
+        $('.instructions .values').append(li);
     }
 
     // instructions
