@@ -10,7 +10,15 @@
 	<script src="media/cpu.js"></script>
 	<script>
 		$(function () {
-		
+		    
+		    var cpu = new CPU();
+		    
+		    $('.command-load.binary').on('click', function () {
+		        
+		        cpu.load('00000000 00000000', parseBin);
+		        
+		        return false;
+		    });
 		});
 	</script>
 </head>
@@ -19,7 +27,8 @@
 <div class="cpu">
     
     <div class="commands">
-        <p><a href="">Fast run</a>, <a href="">Slow run</a>, <a href="">Step</a>, <a href="">Load</a></p>
+        <p><a href="#" class="command-load binary">Load Binary</a>, <a href="#" class="command-load decimal">Load Decimal</a>, <a href="#" class="command-load hex">Load Hex</a></p>
+        <p><a href="">Fast run</a>, <a href="">Slow run</a>, <a href="">Step</a></p>
     </div>
     
     <div class="block info">
