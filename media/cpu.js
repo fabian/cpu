@@ -360,22 +360,16 @@ var CPU = function () {
     this.memory[i++] = '11110100';//SWDD #500
     
     this.memory[i++] = '00111000';
-    this.memory[i++] = '01101110';//BCD #110
+    this.memory[i++] = '01110000';//BCD #112
     
     this.memory[i++] = '00100000';
-    this.memory[i++] = '01111000';//BD #120
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111100'; //SWDD R0 #508
-    
+    this.memory[i++] = '01110110';//BD #118
+        
     this.memory[i++] = '01000001';
     this.memory[i++] = '11111000';//LWDD R0 #504
     
     this.memory[i++] = '00000111';
     this.memory[i++] = '11000000';//ADD R1
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000';//SWDD #504
     
     this.memory[i++] = '01100001';
     this.memory[i++] = '11111000';//SWDD #504
