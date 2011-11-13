@@ -383,19 +383,26 @@ var CPU = function () {
     this.memory[i++] = '01100001';
     this.memory[i++] = '11110110';//SWDD #504
     
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110100';//LWDD R0 #500
-    
     this.memory[i++] = '00101000';
     this.memory[i++] = '01100100';//BNZD R0 #100
     
     
     var i = 500;
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '00001100';//7
     
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '00001101';//3
+    this.memory[i++] = '00010000';
+    this.memory[i++] = '11100001';//4321
+    
+    this.memory[i++] = '11111011';
+    this.memory[i++] = '00101110';//-1234
+    
+    /*this.memory[i++] = '00000000';
+    this.memory[i++] = '00001100';//12*/
+    
+    /*this.memory[i++] = '00000000';
+    this.memory[i++] = '00001101';//13*/
+    
+    /*this.memory[i++] = '11111111';
+    this.memory[i++] = '11111110';//-2*/
     
     this.display();
 };
