@@ -1,9 +1,6 @@
 var INSTRUCTIONS = {
     'CLR': {
         regex: '0000([01][01])101.......',
-        bits: function (rnr) {
-            return '0000' + rnr + '10 10000000';
-        },
         optcode: function (rnr) {
             return 'CLR R' + rnr;
         },
@@ -11,11 +8,44 @@ var INSTRUCTIONS = {
             this.register[rnr] = 0;
         }
     },
+    'ADD': {
+        regex: '0000([01][01])111.......',
+        optcode: function (rnr) {
+            return 'ADD R' + rnr;
+        },
+        execute: function (rnr) {
+            this.register[0] += this.register[rnr];
+        }
+    },
+    'ADDD': {
+        regex: '1([01]{15})',
+        optcode: function (zahl) {
+            return 'ADDD #' + zahl;
+        },
+        execute: function (zahl) {
+            this.register[0] += zahl;
+        }
+    },
+    'INC': {
+        regex: '0{7}1.{8}',
+        optcode: function () {
+            return 'INC';
+        },
+        execute: function () {
+            this.register[0] += 1;
+        }
+    },
+    'DEC': {
+        regex: '0{5}100.{8}',
+        optcode: function () {
+            return 'DEC';
+        },
+        execute: function () {
+            this.register[0] -= 1;
+        }
+    },
     'LWDD': {
         regex: '010.([01][01])([01]{10})',
-        bits: function (rnr, adr) {
-            return '0100' + rnr + adr;
-        },
         optcode: function (rnr, adr) {
             return 'LWDD R' + rnr + ', #' + adr;
         },
@@ -23,16 +53,208 @@ var INSTRUCTIONS = {
             this.register[rnr] = bin2dec(this.memory[adr] + this.memory[adr + 1]);
         }
     },
-    'ADDD': {
-        regex: '1([01]{15})',
-        bits: function (zahl) {
-            return '1' + dec2bin(zahl, 15);
+    'SWDD': {
+        regex: '011.([01][01])([01]{10})',
+        optcode: function (rnr, adr) {
+            return 'SWDD R' + rnr + ', #' + adr;
         },
-        optcode: function (zahl) {
-            return 'ADDD #' + zahl;
+        execute: function (rnr, adr) {
+            var bits = dec2bin(this.register[rnr]);
+            this.memory[adr] = bits.slice(0, 8);
+            this.memory[adr + 1] = bits.slice(8, 16);
+        }
+    },
+    'SRA': {
+        regex: '0{5}101.{8}',
+        optcode: function () {
+            return 'SRA';
         },
-        execute: function (zahl) {
-            this.register[0] += zahl;
+        execute: function () {
+            var bits = dec2bin(this.register[0]);
+            this.carry = parseInt(bits.slice(15, 16));
+            this.register[0] = this.register[0] / 2;
+        }
+    },
+    'SLA': {
+        regex: '0{4}1000.{8}',
+        optcode: function () {
+            return 'SLA';
+        },
+        execute: function () {
+            var bits = dec2bin(this.register[0]);
+            this.carry = parseInt(bits.slice(1, 2));
+            this.register[0] = this.register[0] * 2;
+        }
+    },
+    'SRL': {
+        regex: '0{4}1001.{8}',
+        optcode: function () {
+            return 'SRL';
+        },
+        execute: function () {
+            var bits = dec2bin(this.register[0]);
+            this.carry = parseInt(bits.slice(15, 16));
+            this.register[0] = bin2dec('0' + bits.slice(0, 15));
+        }
+    },
+    'SLL': {
+        regex: '0{4}1100.{8}',
+        optcode: function () {
+            return 'SLL';
+        },
+        execute: function () {
+            var bits = dec2bin(this.register[0]);
+            this.carry = parseInt(bits.slice(0, 1));
+            this.register[0] = bin2dec(bits.slice(1, 16) + '0');
+        }
+    },
+    'AND': {
+        regex: '0000([01][01])100.......',
+        optcode: function (rnr) {
+            return 'AND R' + rnr;
+        },
+        execute: function (rnr) {
+            
+            var accu = dec2bin(this.register[0]);
+            var register = dec2bin(this.register[rnr]);
+            var bits = '';
+            
+            for (var i = 0; i < accu.length; i++) {
+                if (accu[i] == '1' && register[i] == '1') {
+                    bits += '1';
+                } else {
+                    bits += '0';
+                }
+            }
+            
+            this.register[0] = bin2dec(bits);
+        }
+    },
+    'OR': {
+        regex: '0000([01][01])110.......',
+        optcode: function (rnr) {
+            return 'OR R' + rnr;
+        },
+        execute: function (rnr) {
+            
+            var accu = dec2bin(this.register[0]);
+            var register = dec2bin(this.register[rnr]);
+            var bits = '';
+            
+            for (var i = 0; i < accu.length; i++) {
+                if (accu[i] == '1' || register[i] == '1') {
+                    bits += '1';
+                } else {
+                    bits += '0';
+                }
+            }
+            
+            this.register[0] = bin2dec(bits);
+        }
+    },
+    'NOT': {
+        regex: '0{8}1.{7}',
+        optcode: function () {
+            return 'NOT';
+        },
+        execute: function () {
+            
+            var accu = dec2bin(this.register[0]);
+            var bits = '';
+            
+            for (var i = 0; i < accu.length; i++) {
+                if (accu[i] == '1') {
+                    bits += '0';
+                } else {
+                    bits += '1';
+                }
+            }
+            
+            this.register[0] = bin2dec(bits);
+        }
+    },
+    'BZ': {
+        regex: '0001([01][01])10.{8}',
+        optcode: function (rnr) {
+            return 'BZ R' + rnr;
+        },
+        execute: function (rnr) {
+            if (this.register[0] == 0) {
+                this.position = this.register[rnr];
+            }
+        }
+    },
+    'BNZ': {
+        regex: '0001([01][01])01.{8}',
+        optcode: function (rnr) {
+            return 'BNZ R' + rnr;
+        },
+        execute: function (rnr) {
+            if (this.register[0] != 0) {
+                this.position = this.register[rnr];
+            }
+        }
+    },
+    'BC': {
+        regex: '0001([01][01])11.{8}',
+        optcode: function (rnr) {
+            return 'BC R' + rnr;
+        },
+        execute: function (rnr) {
+            if (this.carry == 1) {
+                this.position = this.register[rnr];
+            }
+        }
+    },
+    'B': {
+        regex: '0001([01][01])00.{8}',
+        optcode: function (rnr) {
+            return 'B R' + rnr;
+        },
+        execute: function (rnr) {
+            this.position = this.register[rnr];
+        }
+    },
+    'BZD': {
+        regex: '00110.([01]{10})',
+        optcode: function (addr) {
+            return 'BZD #' + addr;
+        },
+        execute: function (addr) {
+            if (this.register[0] == 0) {
+                this.position = addr;
+            }
+        }
+    },
+    'BNZD': {
+        regex: '00101.([01]{10})',
+        optcode: function (addr) {
+            return 'BNZD #' + addr;
+        },
+        execute: function (addr) {
+            if (this.register[0] != 0) {
+                this.position = addr;
+            }
+        }
+    },
+    'BCD': {
+        regex: '00111.([01]{10})',
+        optcode: function (addr) {
+            return 'BCD #' + addr;
+        },
+        execute: function (addr) {
+            if (this.carry == 1) {
+                this.position = addr;
+            }
+        }
+    },
+    'BD': {
+        regex: '00100.([01]{10})',
+        optcode: function (addr) {
+            return 'BD #' + addr;
+        },
+        execute: function (addr) {
+            this.position = addr;
         }
     }
 };
@@ -123,10 +345,22 @@ var CPU = function () {
     this.memory = this.empty();
     this.memory[i++] = '00000010';
     this.memory[i++] = '10000000';
+    this.memory[i++] = '00000011';
+    this.memory[i++] = '10000000';
     this.memory[i++] = '10000000';
     this.memory[i++] = '00000011';
     this.memory[i++] = '10000000';
     this.memory[i++] = '00000110';
+    this.memory[i++] = '01000101';
+    this.memory[i++] = '11110100';
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '10000000';
+    
+    var i = 500;
+    this.memory[i++] = '11111111';
+    this.memory[i++] = '00000000';
     
     this.display();
 };

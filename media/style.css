@@ -68,7 +68,7 @@ body {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 278px;
+    width: 258px;
 }
 
 .right {
@@ -96,7 +96,7 @@ body {
 
 .block .values {
 	overflow: auto;
-	width: 280px;
+	width: 300px;
 }
 
 .values li {
