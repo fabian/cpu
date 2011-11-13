@@ -60,30 +60,43 @@ body {
 	color: rgb(141, 187, 158);
 }
 
-.commands {
+.commands p {
+    padding-bottom: 5px;
+}
+
+.left {
     position: absolute;
-    top: 30px;
-    right: 30px;
-    text-align: right;
-    line-height: 1.6;
+    top: 10px;
+    left: 10px;
+    width: 278px;
+}
+
+.right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .block {
-    clear: both;
     border: 1px solid;
     border-color: rgba(101, 185, 133, 0.2) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(101, 185, 133, 0.2);
     padding: 20px 0 10px 20px;
 }
 
-.block h2,
+
 .block .titles {
+    width: 130px;
     float: left;
+}
+
+.block h2 {
     width: 88px;
+    padding-bottom: 10px;
 }
 
 .block .values {
 	overflow: auto;
-	width: 470px;
+	width: 280px;
 }
 
 .values li {
@@ -91,6 +104,7 @@ body {
 }
 
 .block.info .values {
+    width: 40px;
     height: 45px;
 }
 
@@ -99,7 +113,7 @@ body {
 }
 
 .block.instructions .values {
-    height: 125px;    
+    height: 252px;    
 }
 
 .block.instructions .values .active {
@@ -107,6 +121,6 @@ body {
 }
 
 .block.memory .values {
-	height: 222px;
+	height: 216px;
 }
 
