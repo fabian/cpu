@@ -18,6 +18,16 @@
 		        return false;
 		    });
 		    
+		    $('.command-load.hex').on('click', function () {
+		        cpu.load("FF FF", parseHex);
+		        return false;
+		    });
+		    
+		    $('.command-load.dec').on('click', function () {
+		        cpu.load('0', parseDec);
+		        return false;
+		    });
+		    
 		    $('.command-fast').on('click', function () {
 		        cpu.fast();
 		        return false;
@@ -41,7 +51,7 @@
 <div class="cpu">
     
     <div class="commands">
-        <p><a href="#" class="command-load binary">Load Binary</a>, <a href="#" class="command-load decimal">Load Decimal</a>, <a href="#" class="command-load hex">Load Hex</a></p>
+        <p><a href="#" class="command-load binary">Load Binary</a>, <a href="#" class="command-load dec">Load Decimal</a>, <a href="#" class="command-load hex">Load Hex</a></p>
         <p><a href="#" class="command-fast">Fast run</a>, <a href="#" class="command-slow">Slow run</a>, <a href="#" class="command-step">Step</a></p>
     </div>
     

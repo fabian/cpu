@@ -52,6 +52,40 @@ function parseBin(memory, input, offset) {
     return memory;
 }
 
+function parseHex(memory, input, offset) {
+    
+    input = input.replace(/[^0-9A-F]*/g, '');
+    
+    if (input.length % 4 != 0) {
+        return false; // invalid input
+    }
+    
+    for (var i = 0; i < (input.length / 2); i++) {
+        memory[i + offset] = hex2bin(input.slice(i*2, (i+1)*2), 8);
+    }
+    
+    return memory;
+}
+
+function parseDec(memory, input, offset) {
+    
+    input = input.split(/[^0-9-]/g);
+    
+    var n = 0;
+    var bits = '';
+    
+    for (var i = 0; i < input.length; i++) {
+        
+        n = parseInt(input[i]);
+        bits = dec2bin(n);
+        
+        memory[i*2 + offset] = bits.slice(0, 8);
+        memory[i*2 + offset + 1] = bits.slice(8, 16);
+    }
+    
+    return memory;
+}
+
 function bin2dec(n) {
     n = parseInt(n, 2);
     if (n > 0x7FFF) { // 0x7FFF = 0b0111 1111 1111 1111
@@ -71,6 +105,13 @@ function dec2bin(n, padding) {
     }
     
     return bin;
+}
+
+function hex2bin(n, padding) {
+    
+    n = parseInt(n, 16);
+    
+    return dec2bin(n, padding);
 }
 
 var CPU = function () {
