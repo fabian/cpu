@@ -72,7 +72,7 @@ var INSTRUCTIONS = {
         execute: function () {
             var bits = dec2bin(this.register[0]);
             this.carry = parseInt(bits.slice(15, 16));
-            this.register[0] = this.register[0] / 2;
+            this.register[0] = bin2dec(bits.slice(0, 15));
         }
     },
     'SLA': {
@@ -343,24 +343,65 @@ var CPU = function () {
     // Addition 3 + 6
     var i = 100;
     this.memory = this.empty();
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000';
-    this.memory[i++] = '00000011';
-    this.memory[i++] = '10000000';
-    this.memory[i++] = '10000000';
-    this.memory[i++] = '00000011';
-    this.memory[i++] = '10000000';
-    this.memory[i++] = '00000110';
+    //010.([01][01])([01]{10})
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11110100';//LWDD R0 #500
+    
     this.memory[i++] = '01000101';
-    this.memory[i++] = '11110100';
+    this.memory[i++] = '11110110';//LWDD R0 #502
+    
+   /* 8/2=4 4/2=2 2/2=0
+    3/2*/
+    
+    this.memory[i++] = '00000101';
+    this.memory[i++] = '00000000';//SRA 
+    
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11110100';//SWDD #500
+    
+    this.memory[i++] = '00111000';
+    this.memory[i++] = '01101110';//BCD #110
+    
+    this.memory[i++] = '00100000';
+    this.memory[i++] = '01111000';//BD #120
+    
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111100'; //SWDD R0 #508
+    
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111000';//LWDD R0 #504
+    
     this.memory[i++] = '00000111';
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000';
+    this.memory[i++] = '11000000';//ADD R1
+    
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111000';//SWDD #504
+    
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111000';//SWDD #504
+    
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11110110';//LWDD R0 #502
+    
+    this.memory[i++] = '00001000';
+    this.memory[i++] = '00000000';//SLA
+    
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11110110';//SWDD #504
+    
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11110100';//LWDD R0 #500
+    
+    this.memory[i++] = '00101000';
+    this.memory[i++] = '01100100';//BNZD R0 #100
+    
     
     var i = 500;
-    this.memory[i++] = '11111111';
     this.memory[i++] = '00000000';
+    this.memory[i++] = '00001100';//7
+    
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '00001101';//3
     
     this.display();
 };
@@ -399,7 +440,7 @@ CPU.prototype.step = function () {
     var position = this.position;
     this.position = this.position + 2;
     
-    var stop = this.decode(this.position).execute();
+    var stop = this.decode(position).execute();
     
     this.count++;
     
