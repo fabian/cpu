@@ -585,11 +585,11 @@ var CPU = function () {
     
     var i = 500;
     
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '00000000'; // 0
+//    this.memory[i++] = '00000000';
+//    this.memory[i++] = '00000000'; // 0
     
-    this.memory[i++] = '01011011';
-    this.memory[i++] = '10100000'; // 23456
+//    this.memory[i++] = '01011011';
+//    this.memory[i++] = '10100000'; // 23456
     
 //    this.memory[i++] = '00000000';
 //    this.memory[i++] = '00000101'; // 5
@@ -597,17 +597,17 @@ var CPU = function () {
 //    this.memory[i++] = '11111111';
 //    this.memory[i++] = '11111011'; // -5
     
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '00000011'; // 3
+//    this.memory[i++] = '00000000';
+//    this.memory[i++] = '00000011'; // 3
     
 //    this.memory[i++] = '11111111';
 //    this.memory[i++] = '11111101'; // -3
     
-//    this.memory[i++] = '00010000';
-//    this.memory[i++] = '11100001'; // 4321
-//    
-//    this.memory[i++] = '11111011';
-//    this.memory[i++] = '00101110'; // -1234
+    this.memory[i++] = '00010000';
+    this.memory[i++] = '11100001'; // 4321
+    
+    this.memory[i++] = '11111011';
+    this.memory[i++] = '00101110'; // -1234
     
     //this.memory[i++] = '00000000';
     //this.memory[i++] = '00001100';//12
