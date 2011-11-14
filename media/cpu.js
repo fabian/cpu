@@ -340,59 +340,46 @@ var CPU = function () {
     
     this.reset();
     
-    // Addition 3 + 6
     var i = 100;
     this.memory = this.empty();
-    //010.([01][01])([01]{10})
     
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000';//NOT 
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111100';//SWDD #508
-    
+    // 100 add extended sign into #508
     this.memory[i++] = '01000001';
-    this.memory[i++] = '11110100';//LWDD R0 #500
+    this.memory[i++] = '11110100'; // LWDD R0, #500
     
-    this.memory[i++] = '01000101';
-    this.memory[i++] = '11110110';//LWDD R0 #502
+    // 102
+    this.memory[i++] = '00001100';
+    this.memory[i++] = '00000000'; // SLL
     
-   /* 8/2=4 4/2=2 2/2=0
-    3/2*/
-    
-    this.memory[i++] = '00000101';
-    this.memory[i++] = '00000000';//SRA 
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11110100';//SWDD #500
-    
+    // 104
     this.memory[i++] = '00111000';
-    this.memory[i++] = '01110100';//BCD #116
+    this.memory[i++] = '01101100'; // BCD #106
     
+    // 106
     this.memory[i++] = '00100000';
-    this.memory[i++] = '01111010';//BD #122
-        
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111000';//LWDD R0 #504
+    this.memory[i++] = '01110010'; // BD #114
     
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '11000000';//ADD R1
+    // 108
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
     
+    // 110
+    this.memory[i++] = '00000001';
+    this.memory[i++] = '00000000'; // INC
+    
+    // 112
     this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000';//SWDD #504
+    this.memory[i++] = '11111100'; // SWDD R0, #508
     
+    // 114 add particial product
     this.memory[i++] = '01000001';
-    this.memory[i++] = '11110110';//LWDD R0 #502
+    this.memory[i++] = '11110110'; // LWDD R0 #502
     
-    this.memory[i++] = '00001000';
-    this.memory[i++] = '00000000';//SLA
     
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11110110';//SWDD #504
     
-    this.memory[i++] = '00101000';
-    this.memory[i++] = '01101000';//BNZD R0 #104
-    
+    // 116
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111000'; // LWDD R1 #500
     
     var i = 500;
     
