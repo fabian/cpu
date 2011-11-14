@@ -485,10 +485,10 @@ var CPU = function () {
     this.memory[i++] = '11111000'; // LWDD R0, #504
     
     // 170
-    //this.memory[i++] = '00001011';
-    //this.memory[i++] = '00000000'; // OR R2
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '00000000'; // NOTHING
+    this.memory[i++] = '00001011';
+    this.memory[i++] = '00000000'; // OR R2
+//    this.memory[i++] = '00000010';
+//    this.memory[i++] = '00000000'; // NOTHING
     
     // 172
     this.memory[i++] = '01100001';
@@ -558,7 +558,7 @@ var CPU = function () {
     
     // 204
     this.memory[i++] = '00101000';
-    this.memory[i++] = '11100110'; // BNZD #230
+    this.memory[i++] = '11111010'; // BNZD #250
     
     // 206
     this.memory[i++] = '00000010';
@@ -594,15 +594,65 @@ var CPU = function () {
     
     // 222
     this.memory[i++] = '00110000';
-    this.memory[i++] = '11100110'; // BZD #230
+    this.memory[i++] = '11111010'; // BZD #250
     
-    // 224
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111000'; // LWDD R0, #504
+    // 206
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
     
-    // 226
+    // 208
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 210
     this.memory[i++] = '00000000';
     this.memory[i++] = '10000000'; // NOT
+    
+    // 212
+    this.memory[i++] = '00000001';
+    this.memory[i++] = '00000000'; // INC
+    
+    // 208
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 224
+    this.memory[i++] = '01000101';
+    this.memory[i++] = '11111000'; // LWDD R1, #504
+    
+    // 208
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 228
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111000'; // SWDD R0, #504
+    
+    i = 250;
+    
+    // 206
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
+    
+    // 208
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 210
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '10000000'; // NOT
+    
+    // 212
+    this.memory[i++] = '00000100';
+    this.memory[i++] = '00000000'; // DEC
+    
+    // 220
+    this.memory[i++] = '01000101';
+    this.memory[i++] = '11111000'; // LWDD R1, #504
+    
+    // 208
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
     
     // 228
     this.memory[i++] = '01100001';
@@ -611,7 +661,10 @@ var CPU = function () {
     
     
     
+    
     var i = 500;
+    
+    
     
 //    this.memory[i++] = '00000000';
 //    this.memory[i++] = '00000000'; // 0
