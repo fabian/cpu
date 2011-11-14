@@ -13,18 +13,33 @@
 		    
 		    var cpu = new CPU();
 		    
-		    $('.command-load.binary').on('click', function () {
-		        cpu.load('00000000 00000000', parseBin);
+		    $('.instructions .command-load.binary').on('click', function () {
+		        cpu.loadInstructions('00000000 00000000', parseBin);
 		        return false;
 		    });
 		    
-		    $('.command-load.hex').on('click', function () {
-		        cpu.load("FF FF", parseHex);
+		    $('.instructions .command-load.hex').on('click', function () {
+		        cpu.loadInstructions("FF FF", parseHex);
 		        return false;
 		    });
 		    
-		    $('.command-load.dec').on('click', function () {
-		        cpu.load('0', parseDec);
+		    $('.instructions .command-load.dec').on('click', function () {
+		        cpu.loadInstructions('0', parseDec);
+		        return false;
+		    });
+		    
+		    $('.memory .command-load.binary').on('click', function () {
+		        cpu.loadMemory('00000000 00000000', parseBin);
+		        return false;
+		    });
+		    
+		    $('.memory .command-load.hex').on('click', function () {
+		        cpu.loadMemory("FF FF", parseHex);
+		        return false;
+		    });
+		    
+		    $('.memory .command-load.dec').on('click', function () {
+		        cpu.loadMemory('0', parseDec);
 		        return false;
 		    });
 		    

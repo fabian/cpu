@@ -728,30 +728,41 @@ CPU.prototype.empty = function () {
     return memory;
 };
 
-CPU.prototype.load = function (empty, converter) {
-
-    var memory = this.empty();
+CPU.prototype.loadInstructions = function (empty, converter) {
+    
+    var memory = this.memory;
+    for (var i = 100; i < 500; i++) {
+        memory[i] = '00000000';
+    }
 
     var instructions = prompt('Please paste instructions:', empty);
     memory = converter(memory, instructions, 100);
 
     if (instructions) {
-    
-        var input = prompt('Please paste input:', empty);
-        memory = converter(memory, input, 500);
-        
-        if (memory) {
-            
-            this.memory = memory;
-            this.display();
-            
-        } else {
-            alert('Invalid memory!');
-        }
-
-    } else {
-        alert('Invalid instructions!');
+        this.memory = memory;
     }
+    
+    this.display();
+};
+
+CPU.prototype.loadMemory = function (empty, converter) {
+
+    var memory = this.empty();
+    var memory = this.memory;
+    for (var i = 500; i < 530; i++) {
+        memory[i] = '00000000';
+    }
+
+    var input = prompt('Please paste input:', empty);
+    memory = converter(memory, input, 500);
+    
+    if (memory) {
+        
+        this.memory = memory;
+        
+    }
+
+    this.display();
 };
 
 CPU.prototype.display = function () {
