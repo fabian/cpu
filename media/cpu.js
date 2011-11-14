@@ -14,14 +14,7 @@ var INSTRUCTIONS = {
             return 'ADD R' + rnr;
         },
         execute: function (rnr) {
-            if (this.register[0] < 0 && this.register[rnr] < 0) {
-            console.log(this.register[0]);
-                this.carry = 1;
-            } else {
-                this.carry = 0;
-            }
             this.register[0] += this.register[rnr];
-            //if (this.register[0] > 32767 || this.register[0] < -32768) {
         }
     },
     'ADDD': {
@@ -31,11 +24,6 @@ var INSTRUCTIONS = {
         },
         execute: function (zahl) {
             this.register[0] += zahl;
-            if (this.register[0] > 32767) {
-                this.carry = 1;
-            } else {
-                this.carry = 0;
-            }
         }
     },
     'INC': {
@@ -352,210 +340,274 @@ var CPU = function () {
     
     this.reset();
     
-    // Addition 3 + 6
     var i = 100;
     this.memory = this.empty();
-    //010.([01][01])([01]{10})
     
-    // fill #508 with ones for negative and zeros for positive
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110110';// LWDD R0 #502
-    
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000';// SLL
-    
-    var negative = dec2bin(i+4);
-    this.memory[i++] = '001110' + negative.slice(6, 8);
-    this.memory[i++] = negative.slice(8, 16);// BCD #NEGATIVE
-    
-    var positive = dec2bin(i+8);
-    this.memory[i++] = '001000' + positive.slice(6, 8);
-    this.memory[i++] = positive.slice(8, 16);// BD #START
-    
-    // #NEGATIVE
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000';// CLR R0 
-    
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000';//NOT 
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111100';//SWDD R0 #508
-    
-    // #START
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110100'; // LWDD R0, #500
-    
-    this.memory[i++] = '01000101';
-    this.memory[i++] = '11110110'; // LWDD R1 #502
-    
-    this.memory[i++] = '01001001';
-    this.memory[i++] = '11111100'; // LWDD R2 #508
-    
-    this.memory[i++] = '00000101';
-    this.memory[i++] = '00000000'; // SRA 
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11110100'; // SWDD R0, #500
-    
-    var high = dec2bin(i+4);
-    this.memory[i++] = '001110' + high.slice(6, 8);
-    this.memory[i++] = high.slice(8, 16); // BCD #HIGH
-    
-    var low = dec2bin(i+16);
-    this.memory[i++] = '001000' + low.slice(6, 8);
-    this.memory[i++] = low.slice(8, 16); // BD #LOW
-    
-    // #HIGH
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111010'; // LWDD R0, #506
-    
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '11000000'; // ADD R1
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111010'; // SWDD #506
-    
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111000'; // LWDD R0, #504
-    
-    // overflow?
-    var overflow = dec2bin(i+4);
-    this.memory[i++] = '001110' + overflow.slice(6, 8);
-    this.memory[i++] = overflow.slice(8, 16); // BCD #OVERFLOW
-    
-    var low = dec2bin(i+4);
-    this.memory[i++] = '001000' + low.slice(6, 8);
-    this.memory[i++] = low.slice(8, 16); // BD #NOFLOW
-    
-    // # OVERFLOW
-    this.memory[i++] = '00000001';
-    this.memory[i++] = '00000000'; // INC
-    
-    // # NOFLOW
-    this.memory[i++] = '00001011';
-    this.memory[i++] = '11000000'; // ADD R2
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD #504
-    
-    // #LOW
+    // 100 add extended sign into #508
     this.memory[i++] = '01000001';
     this.memory[i++] = '11110110'; // LWDD R0, #502
     
+    // 102
     this.memory[i++] = '00001100';
     this.memory[i++] = '00000000'; // SLL
     
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11110110'; // SWDD R0, #502
+    // 104
+    this.memory[i++] = '00111000';
+    this.memory[i++] = '01101100'; // BCD #108
     
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111100'; // LWDD R0, #508
+    // 106
+    this.memory[i++] = '00100000';
+    this.memory[i++] = '01110010'; // BD #114
     
-    var one = dec2bin(i+6);
-    this.memory[i++] = '001110' + one.slice(6, 8);
-    this.memory[i++] = one.slice(8, 16); // BCD #ONE
+    // 108
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
     
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
-    var end = dec2bin(i+6);
-    this.memory[i++] = '001000' + end.slice(6, 8);
-    this.memory[i++] = end.slice(8, 16); // BD #END
-    
-    // #ONE
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
+    // 110
     this.memory[i++] = '00000001';
     this.memory[i++] = '00000000'; // INC
     
-    // #END
+    // 112
     this.memory[i++] = '01100001';
     this.memory[i++] = '11111100'; // SWDD R0, #508
     
+    // 114 add second extended sign into #514
     this.memory[i++] = '01000001';
-    this.memory[i++] = '11110110'; // LWDD R0, #502
+    this.memory[i++] = '11110100'; // LWDD R0, #500
     
+    // 116
     this.memory[i++] = '00001100';
     this.memory[i++] = '00000000'; // SLL
     
-    var start = dec2bin(114);
-    this.memory[i++] = '001010' + start.slice(6, 8);
-    this.memory[i++] = start.slice(8, 16); //BNZD #START
+    // 118
+    this.memory[i++] = '00111000';
+    this.memory[i++] = '01111010'; // BCD #122
     
-    /*
+    // 120
+    this.memory[i++] = '00100000';
+    this.memory[i++] = '10000000'; // BD #128
     
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110110'; // LWDD R0, #502
+    // 122
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
     
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11110110'; // SWDD R0, #502
-    
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111100'; // LWDD R0, #508
-    
-    var one = dec2bin(i+6);
-    this.memory[i++] = '001110' + one.slice(6, 8);
-    this.memory[i++] = one.slice(8, 16); // BCD #ONE
-    
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
-    var end = dec2bin(i+6);
-    this.memory[i++] = '001000' + end.slice(6, 8);
-    this.memory[i++] = end.slice(8, 16); // BD #END
-    
-    // #ONE
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
+    // 124
     this.memory[i++] = '00000001';
     this.memory[i++] = '00000000'; // INC
     
-    // #END
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111100'; // SWDD R0, #508*/
+    // 126
+    this.memory[i++] = '01100010';
+    this.memory[i++] = '00000010'; // SWDD R0, #514
     
-    // minus inverted
-   
-    this.memory[i++] = '01001001';
-    this.memory[i++] = '11111000'; // LWDD R2 #504
+    // 128 init countdown
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
     
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111100'; // LWDD R0 #508
-    
+    // 130
     this.memory[i++] = '00000000';
     this.memory[i++] = '10000000'; // NOT
     
-    this.memory[i++] = '00001011';
-    this.memory[i++] = '11000000'; // ADD R2
-    
+    // 132
     this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD #504
+    this.memory[i++] = '11111110'; // SWDD R0, #510
     
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111100'; // LWDD R0 #508
+    // 134 init 10000000 00000000
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
     
+    // 136
+    this.memory[i++] = '11111111';
+    this.memory[i++] = '11111111'; // ADDD #MAX
+    
+    // 138
     this.memory[i++] = '00000000';
     this.memory[i++] = '10000000'; // NOT
     
-    this.memory[i++] = '00001011';
-    this.memory[i++] = '11000000'; // ADD R2
+    // 140
+    this.memory[i++] = '01100010';
+    this.memory[i++] = '00000000'; // SWDD R0, #512
     
+    // 142
+    this.memory[i++] = '01001010';
+    this.memory[i++] = '00000000'; // LWDD R2, #512
+    
+    
+    // 144 add particial product
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11110110'; // LWDD R0 #502
+    
+    // 146
+    this.memory[i++] = '01000101';
+    this.memory[i++] = '11110100'; // LWDD R1, #500
+    
+    // 148
+    this.memory[i++] = '00001001';
+    this.memory[i++] = '00000000'; // SRL
+    
+    // 150
     this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD #504
+    this.memory[i++] = '11110110'; // SWDD R0, #502
+    
+    // 152
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111000'; // LWDD R0, #504
+    
+    // 154
+    this.memory[i++] = '00111000';
+    this.memory[i++] = '10011110'; // BCD #158
+    
+    // 156
+    this.memory[i++] = '00100000';
+    this.memory[i++] = '10100000'; // BD #160
+    
+    // 158
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 160
+    this.memory[i++] = '00001001';
+    this.memory[i++] = '00000000'; // SRL
+    
+    // 162
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111000'; // SWDD R0, #504
+    
+    // 164 keep sign
+    this.memory[i++] = '01000010';
+    this.memory[i++] = '00000010'; // LWDD R0, #514
+    
+    // 166
+    this.memory[i++] = '00110000';
+    this.memory[i++] = '10101110'; // BZD #174
+    
+    // 168
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111000'; // LWDD R0, #504
+    
+    // 170
+    //this.memory[i++] = '00001011';
+    //this.memory[i++] = '00000000'; // OR R2
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '00000000'; // NOTHING
+    
+    // 172
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111000'; // SWDD R0, #504
+    
+    // 174 process lower bits
+    this.memory[i++] = '00111000';
+    this.memory[i++] = '10110110'; // BCD #182
+    
+    // 176
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111010'; // LWDD R0, #506
+    
+    // 178
+    this.memory[i++] = '00001001';
+    this.memory[i++] = '00000000'; // SRL
+    
+    // 180
+    this.memory[i++] = '00100000';
+    this.memory[i++] = '10111100'; // BD #188
+    
+    // 182
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111010'; // LWDD R0, #506
+    
+    // 184
+    this.memory[i++] = '00001001';
+    this.memory[i++] = '00000000'; // SRL
+    
+    // 186
+    this.memory[i++] = '00001011';
+    this.memory[i++] = '00000000'; // OR R2
+    
+    // 188
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111010'; // SWDD R0, #506
+    
+    // 190 lower countdown
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111110'; // LWDD R0, #510
+    
+    // 192
+    this.memory[i++] = '00001001';
+    this.memory[i++] = '00000000'; // SRL
+    
+    // 194
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111110'; // SWDD R0, #510
+    
+    // 196 loop
+    this.memory[i++] = '00101000';
+    this.memory[i++] = '10010000'; // BNZD #144
+    
+    
+    
+    // 198 check extended sign
+    this.memory[i++] = '01000001';
+    this.memory[i++] = '11111100'; // LWDD R0, #508
+    
+    // 200
+    this.memory[i++] = '00110000';
+    this.memory[i++] = '11011010'; // BZD #218
+    
+    // 202
+    this.memory[i++] = '00000010';
+    this.memory[i++] = '10000000'; // CLR R0
+    
+    // 204
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 206
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '10000000'; // NOT
+    
+    // 208
+    this.memory[i++] = '00000001';
+    this.memory[i++] = '00000000'; // INC
+    
+    // 210
+    this.memory[i++] = '01000101';
+    this.memory[i++] = '11111000'; // LWDD R1, #504
+    
+    // 212
+    this.memory[i++] = '00000111';
+    this.memory[i++] = '10000000'; // ADD R1
+    
+    // 216
+    this.memory[i++] = '01100001';
+    this.memory[i++] = '11111000'; // SWDD R0, #504
+    
+    
+    
     
     var i = 500;
     
-    this.memory[i++] = '00010000';
-    this.memory[i++] = '11100001'; //4321
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '00000000'; // 0
     
-    this.memory[i++] = '11111011';
-    this.memory[i++] = '00101110'; //-1234
+    this.memory[i++] = '01011011';
+    this.memory[i++] = '10100000'; // 23456
+    
+//    this.memory[i++] = '00000000';
+//    this.memory[i++] = '00000101'; // 5
+    
+//    this.memory[i++] = '11111111';
+//    this.memory[i++] = '11111011'; // -5
+    
+    this.memory[i++] = '00000000';
+    this.memory[i++] = '00000011'; // 3
+    
+//    this.memory[i++] = '11111111';
+//    this.memory[i++] = '11111101'; // -3
+    
+//    this.memory[i++] = '00010000';
+//    this.memory[i++] = '11100001'; // 4321
+//    
+//    this.memory[i++] = '11111011';
+//    this.memory[i++] = '00101110'; // -1234
     
     //this.memory[i++] = '00000000';
     //this.memory[i++] = '00001100';//12
@@ -563,8 +615,8 @@ var CPU = function () {
     //this.memory[i++] = '00000000';
     //this.memory[i++] = '00001101';//13
     
-    //this.memory[i++] = '11111111';
-    //this.memory[i++] = '11111110';//-2
+    /*this.memory[i++] = '11111111';
+    this.memory[i++] = '11111110';//-2*/
     
     this.display();
 };
@@ -603,7 +655,10 @@ CPU.prototype.step = function () {
     var position = this.position;
     this.position = this.position + 2;
     
-    var stop = this.decode(position).execute();
+    var instruction = this.decode(position);
+    var stop = instruction.execute();
+    
+    console.log(instruction.optcode());
     
     this.count++;
     
