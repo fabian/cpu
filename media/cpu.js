@@ -557,8 +557,8 @@ var CPU = function () {
     this.memory[i++] = '00000010'; // LWDD R0, #514
     
     // 204
-    this.memory[i++] = '00101001';
-    this.memory[i++] = '00011000'; // BNZD #280
+    this.memory[i++] = '00110000';
+    this.memory[i++] = '11111010'; // BZD #250
     
     // 206
     this.memory[i++] = '00000010';
@@ -586,15 +586,15 @@ var CPU = function () {
     
     // 218
     this.memory[i++] = '00100000';
-    this.memory[i++] = '11111010'; // BD #228
+    this.memory[i++] = '11100100'; // BD #228
     
     // 220
     this.memory[i++] = '01000010';
     this.memory[i++] = '00000010'; // LWDD R0, #514
     
     // 222
-    this.memory[i++] = '00101000';
-    this.memory[i++] = '11111010'; // BNZD #250
+    this.memory[i++] = '00110000';
+    this.memory[i++] = '11111010'; // BZD #250
     
     // 206
     this.memory[i++] = '00000010';
@@ -630,50 +630,8 @@ var CPU = function () {
     
     i = 250;
     
-    // 250
-    	this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-   // this.memory[i++] = '01000001';
-    //this.memory[i++] = '11111010'; // LWDD R0, #506
-    
-    // 252
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000'; // NOT
-    /*
-    this.memory[i++] = '00001000';
-    this.memory[i++] = '00000000'; // SLA
-    
-    this.memory[i++] = '00111001';
-    this.memory[i++] = '00100010'; // BCD #290
-  	
-  	this.memory[i++] = '00000010';
-  	this.memory[i++] = '10000000'; // CLR R0
-  	
-  	this.memory[i++] = '00000000';
-  	this.memory[i++] = '10000000'; // NOT
-  */
- 	this.memory[i++] = '01100001';
- 	this.memory[i++] = '11111000'; // SWDD R0, #504
     
     
-    i = 280;
-    
-    // 280
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 282
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD R0, #504
-    
-    i = 290;
-    
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111010'; // LWDD R0, #506
-    
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD R0, #504
     
     
     
@@ -754,7 +712,7 @@ CPU.prototype.step = function () {
     var instruction = this.decode(position);
     var stop = instruction.execute();
     
-    console.log(position+ ': ' + instruction.optcode() + ' carry: ' + this.carry);
+    console.log(position+ ': ' + instruction.optcode() + ' (Carry: ' + this.carry + ')');
     
     this.count++;
     
