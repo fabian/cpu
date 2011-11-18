@@ -822,15 +822,19 @@ CPU.prototype.loadMemory = function (empty, converter) {
 CPU.prototype.display = function () {
 
     // Info
-    $('.info .ip').text(this.position);
-    $('.info .carry').text(this.carry);
-    $('.info .count').text(this.count);
+    $('.info li').text(this.count);
+
+    // Decoded Instruction
+    $('.decoded li').html('<em>' + this.position + '</em> ' + this.decode(this.position).optcode());
 
     // Register
     $('.register .values').empty();
     for (var i = 0; i < this.register.length; i++) {
         $('.register .values').append('<li><em>R0' + i + '</em> ' + dec2bin(this.register[i]) + ' <em>' + this.register[i] + '</em></li>');
     }
+    
+    // Carry
+    $('.register .values').append('<li title="Carry"><em>CA0</em> ' + this.carry + '</em></li>');
 
     // instructions
     $('.instructions .values').empty();

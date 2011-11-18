@@ -58,7 +58,7 @@ body {
 }
 
 .block .titles {
-    width: 130px;
+    width: 110px;
     float: left;
 }
 
@@ -76,7 +76,6 @@ body {
 }
 
 .block.info .values {
-    width: 40px;
     height: 45px;
 }
 
