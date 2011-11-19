@@ -13,10 +13,86 @@
 		    
 		    var cpu = new CPU();
 		    
+		    var multi = [
+		        '100 LWDD R0, #502', // add extended sign into #508
+		        '102 SLL',
+		        '104 BCD #108',
+		        '106 BD #114',
+		        '108 CLR R0',
+		        '110 INC',
+		        '112 SWDD R0, #508',
+		        '114 LWDD R0, #500', // add second extended sign into #514
+		        '116 SLL',
+		        '118 BCD #122',
+		        '120 BD #128',
+		        '122 CLR R0',
+		        '124 INC',
+		        '126 SWDD R0, #514',
+		        '128 CLR R0',
+		        '130 NOT',
+		        '132 SWDD R0, #510',
+		        '134 CLR R0',
+		        '136 ADDD #32767',
+		        '138 NOT',
+		        '140 SWDD R0, #512',
+		        '142 LWDD R2, #512',
+		        '144 LWDD R0, #502', // add particial product
+		        '146 LWDD R1, #500',
+		        '148 SRL',
+		        '150 SWDD R0, #502',
+		        '152 LWDD R0, #504',
+		        '154 BCD #158',
+		        '156 BD #160',
+		        '158 ADD R1',
+		        '160 SRL',
+		        '162 SWDD R0, #504',
+		        '164 LWDD R0, #514',
+		        '166 BZD #174',
+		        '168 LWDD R0, #504',
+		        '170 OR R2',
+		        '172 SWDD R0, #504',
+		        '174 BCD #182', // process lower bits
+		        '176 LWDD R0, #506',
+		        '178 SRL',
+		        '180 BD #188',
+		        '182 LWDD R0, #506',
+		        '184 SRL',
+		        '186 OR R2',
+		        '188 SWDD R0, #506',
+		        '190 LWDD R0, #510', // lower countdown
+		        '192 SRL',
+		        '194 SWDD R0, #510',
+		        '196 BNZD #144',
+		        '198 LWDD R0, #508', // check extended sign
+		        '200 BZD #220',
+		        '202 LWDD R0, #514',
+		        '204 BZD #250',
+		        '206 CLR R0',
+		        '208 ADD R1',
+		        '210 NOT',
+		        '212 INC',
+		        '214 LWDD R1, #504',
+		        '216 ADD R1',
+		        '218 BD #228',
+		        '220 LWDD R0, #514',
+		        '222 BZD #250',
+		        '224 CLR R0',
+		        '226 ADD R1',
+		        '228 NOT',
+		        '230 INC',
+		        '232 ADD R1',
+		        '234 LWDD R1, #504',
+		        '236 ADD R1',
+		        '238 SWDD R0, #504'
+		    ];		        
+		    cpu.load(100, multi.join('\n'), cpu.parseAssembly);
+		    cpu.load(500, '-5,3', cpu.parseDec);
+		    
 		    function load(from, empty, converter) {
                 
     		    $('.overlay .values').val(empty);
     		    $('.overlay').show();
+    		    $('.overlay .values').focus().select();
     		    
     		    var that =this;
     		    $('.overlay .apply').one('click', function() {
@@ -29,37 +105,37 @@
 		    }
 		    
 		    $('.instructions .command-load.assembly').on('click', function () {
-		        load(100, '100 ADDD #255\n102 NOT', cpu.parseAssembly);
+		        load(100, '100 ADDD #255\n102 NOT\n', cpu.parseAssembly);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.binary').on('click', function () {
-		        load(100, '1000000011111111\n0000000010000000', cpu.parseBin);
+		        load(100, '1000000011111111\n0000000010000000\n', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.hex').on('click', function () {
-		        load(100, '80 FF\n00 80', cpu.parseHex);
+		        load(100, '80 FF\n00 80\n', cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.dec').on('click', function () {
-		        load(100, '33023\n128', cpu.parseDec);
+		        load(100, '33023\n128\n', cpu.parseDec);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.binary').on('click', function () {
-		        load(500, '1111111111111011\n0000000000000011', cpu.parseBin);
+		        load(500, '1111111111111011\n0000000000000011\n', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.hex').on('click', function () {
-		        load(500, 'FF FB\n00 03', cpu.parseHex);
+		        load(500, 'FF FB\n00 03\n', cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.dec').on('click', function () {
-		        load(500, '-5\n3', cpu.parseDec);
+		        load(500, '-5\n3\n', cpu.parseDec);
 		        return false;
 		    });
 		    
