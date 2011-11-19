@@ -383,48 +383,6 @@ var CPU = function () {
 
     this.reset();
     
-    var i = 100;
-    this.memory = this.empty();
-    
-    var i = 500;
-    
-    
-    
-//    this.memory[i++] = '00000000';
-//    this.memory[i++] = '00000000'; // 0
-    
-//    this.memory[i++] = '01011011';
-//    this.memory[i++] = '10100000'; // 23456
-    
-//    this.memory[i++] = '00000000';
-//    this.memory[i++] = '00000101'; // 5
-//    
-    this.memory[i++] = '11111111';
-    this.memory[i++] = '11111011'; // -5
-    
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '00000011'; // 3
-    
-//    this.memory[i++] = '11111111';
-//    this.memory[i++] = '11111101'; // -3
-    
-//    this.memory[i++] = '00010000';
-//    this.memory[i++] = '11100001'; // 4321
-//    
-//    this.memory[i++] = '11111011';
-//    this.memory[i++] = '00101110'; // -1234
-    
-    //this.memory[i++] = '00000000';
-    //this.memory[i++] = '00001100';//12
-    
-    //this.memory[i++] = '00000000';
-    //this.memory[i++] = '00001101';//13
-    
-    /*this.memory[i++] = '11111111';
-    this.memory[i++] = '11111110';//-2*/
-    
-    
-//    this.memory = this.empty();
 //    var string = '';
 //    for (var name in INSTRUCTIONS) {
 //        
@@ -433,82 +391,6 @@ var CPU = function () {
 //        string += instruction.optcode.call(this, 2, 974) + '\n';
 //    }
 //    this.parseAssembly(string, 100);
-    
-    
-    var multi = [
-        '100 LWDD R0, #502', // add extended sign into #508
-        '102 SLL',
-        '104 BCD #108',
-        '106 BD #114',
-        '108 CLR R0',
-        '110 INC',
-        '112 SWDD R0, #508',
-        '114 LWDD R0, #500', // add second extended sign into #514
-        '116 SLL',
-        '118 BCD #122',
-        '120 BD #128',
-        '122 CLR R0',
-        '124 INC',
-        '126 SWDD R0, #514',
-        '128 CLR R0',
-        '130 NOT',
-        '132 SWDD R0, #510',
-        '134 CLR R0',
-        '136 ADDD #32767',
-        '138 NOT',
-        '140 SWDD R0, #512',
-        '142 LWDD R2, #512',
-        '144 LWDD R0, #502', // add particial product
-        '146 LWDD R1, #500',
-        '148 SRL',
-        '150 SWDD R0, #502',
-        '152 LWDD R0, #504',
-        '154 BCD #158',
-        '156 BD #160',
-        '158 ADD R1',
-        '160 SRL',
-        '162 SWDD R0, #504',
-        '164 LWDD R0, #514',
-        '166 BZD #174',
-        '168 LWDD R0, #504',
-        '170 OR R2',
-        '172 SWDD R0, #504',
-        '174 BCD #182', // process lower bits
-        '176 LWDD R0, #506',
-        '178 SRL',
-        '180 BD #188',
-        '182 LWDD R0, #506',
-        '184 SRL',
-        '186 OR R2',
-        '188 SWDD R0, #506',
-        '190 LWDD R0, #510', // lower countdown
-        '192 SRL',
-        '194 SWDD R0, #510',
-        '196 BNZD #144',
-        '198 LWDD R0, #508', // check extended sign
-        '200 BZD #220',
-        '202 LWDD R0, #514',
-        '204 BZD #250',
-        '206 CLR R0',
-        '208 ADD R1',
-        '210 NOT',
-        '212 INC',
-        '214 LWDD R1, #504',
-        '216 ADD R1',
-        '218 BD #228',
-        '220 LWDD R0, #514',
-        '222 BZD #250',
-        '224 CLR R0',
-        '226 ADD R1',
-        '228 NOT',
-        '230 INC',
-        '232 ADD R1',
-        '234 LWDD R1, #504',
-        '236 ADD R1',
-        '238 SWDD R0, #504'
-    ];
-    
-    this.parseAssembly(multi.join('\n'), 100);
     
     this.display();
 };
@@ -697,6 +579,8 @@ CPU.prototype.reset = function () {
     for (var i = 0; i < 4; i++) {
         this.register[i] = 0;
     }
+    
+    this.memory = this.empty();
 };
 
 CPU.prototype.empty = function () {
