@@ -6,6 +6,10 @@ var INSTRUCTIONS = {
         },
         execute: function (rnr) {
             this.register[rnr] = 0;
+        },
+        assembly: 'CLR R([0-3])',
+        compile: function (rnr) {
+            return '0000' + dec2bin(rnr, 2) + '1010000000';
         }
     },
     'ADD': {
@@ -15,6 +19,10 @@ var INSTRUCTIONS = {
         },
         execute: function (rnr) {
             this.register[0] += this.register[rnr];
+        },
+        assembly: 'ADD R([0-3])',
+        compile: function (rnr) {
+            return '0000' + dec2bin(rnr, 2) + '1110000000';
         }
     },
     'ADDD': {
@@ -24,6 +32,10 @@ var INSTRUCTIONS = {
         },
         execute: function (zahl) {
             this.register[0] += zahl;
+        },
+        assembly: 'ADDD #([0-9]{1,5})',
+        compile: function (rnr) {
+            return '1' + dec2bin(rnr, 15);
         }
     },
     'INC': {
@@ -33,6 +45,10 @@ var INSTRUCTIONS = {
         },
         execute: function () {
             this.register[0] += 1;
+        },
+        assembly: 'INC',
+        compile: function () {
+            return '0000000100000000';
         }
     },
     'DEC': {
@@ -42,6 +58,10 @@ var INSTRUCTIONS = {
         },
         execute: function () {
             this.register[0] -= 1;
+        },
+        assembly: 'DEC',
+        compile: function () {
+            return '0000010000000000';
         }
     },
     'LWDD': {
@@ -51,6 +71,10 @@ var INSTRUCTIONS = {
         },
         execute: function (rnr, adr) {
             this.register[rnr] = bin2dec(this.memory[adr] + this.memory[adr + 1]);
+        },
+        assembly: 'LWDD R([0-3]), #([0-9]{1,4})',
+        compile: function (rnr, adr) {
+            return '0100' + dec2bin(rnr, 2) + dec2bin(adr, 10);
         }
     },
     'SWDD': {
@@ -62,6 +86,10 @@ var INSTRUCTIONS = {
             var bits = dec2bin(this.register[rnr]);
             this.memory[adr] = bits.slice(0, 8);
             this.memory[adr + 1] = bits.slice(8, 16);
+        },
+        assembly: 'SWDD R([0-3]), #([0-9]{1,4})',
+        compile: function (rnr, adr) {
+            return '0110' + dec2bin(rnr, 2) + dec2bin(adr, 10);
         }
     },
     'SRA': {
@@ -73,6 +101,10 @@ var INSTRUCTIONS = {
             var bits = dec2bin(this.register[0]);
             this.carry = parseInt(bits.slice(15, 16));
             this.register[0] = bin2dec(bits.slice(0, 15));
+        },
+        assembly: 'SRA',
+        compile: function () {
+            return '0000010100000000';
         }
     },
     'SLA': {
@@ -84,6 +116,10 @@ var INSTRUCTIONS = {
             var bits = dec2bin(this.register[0]);
             this.carry = parseInt(bits.slice(1, 2));
             this.register[0] = this.register[0] * 2;
+        },
+        assembly: 'SLA',
+        compile: function () {
+            return '0000100000000000';
         }
     },
     'SRL': {
@@ -95,6 +131,10 @@ var INSTRUCTIONS = {
             var bits = dec2bin(this.register[0]);
             this.carry = parseInt(bits.slice(15, 16));
             this.register[0] = bin2dec('0' + bits.slice(0, 15));
+        },
+        assembly: 'SRL',
+        compile: function () {
+            return '0000100100000000';
         }
     },
     'SLL': {
@@ -106,6 +146,10 @@ var INSTRUCTIONS = {
             var bits = dec2bin(this.register[0]);
             this.carry = parseInt(bits.slice(0, 1));
             this.register[0] = bin2dec(bits.slice(1, 16) + '0');
+        },
+        assembly: 'SLL',
+        compile: function () {
+            return '0000110000000000';
         }
     },
     'AND': {
@@ -128,6 +172,10 @@ var INSTRUCTIONS = {
             }
             
             this.register[0] = bin2dec(bits);
+        },
+        assembly: 'AND R([0-3])',
+        compile: function (rnr) {
+            return '0000' + dec2bin(rnr, 2) + '1000000000';
         }
     },
     'OR': {
@@ -150,6 +198,10 @@ var INSTRUCTIONS = {
             }
             
             this.register[0] = bin2dec(bits);
+        },
+        assembly: 'OR R([0-3])',
+        compile: function (rnr) {
+            return '0000' + dec2bin(rnr, 2) + '1100000000';
         }
     },
     'NOT': {
@@ -171,6 +223,10 @@ var INSTRUCTIONS = {
             }
             
             this.register[0] = bin2dec(bits);
+        },
+        assembly: 'NOT',
+        compile: function () {
+            return '0000000010000000';
         }
     },
     'BZ': {
@@ -182,6 +238,10 @@ var INSTRUCTIONS = {
             if (this.register[0] == 0) {
                 this.position = this.register[rnr];
             }
+        },
+        assembly: 'BZ R([0-3])',
+        compile: function (rnr) {
+            return '0001' + dec2bin(rnr, 2) + '1000000000';
         }
     },
     'BNZ': {
@@ -193,6 +253,10 @@ var INSTRUCTIONS = {
             if (this.register[0] != 0) {
                 this.position = this.register[rnr];
             }
+        },
+        assembly: 'BNZ R([0-3])',
+        compile: function (rnr) {
+            return '0001' + dec2bin(rnr, 2) + '0100000000';
         }
     },
     'BC': {
@@ -204,6 +268,10 @@ var INSTRUCTIONS = {
             if (this.carry == 1) {
                 this.position = this.register[rnr];
             }
+        },
+        assembly: 'BC R([0-3])',
+        compile: function (rnr) {
+            return '0001' + dec2bin(rnr, 2) + '1100000000';
         }
     },
     'B': {
@@ -213,6 +281,10 @@ var INSTRUCTIONS = {
         },
         execute: function (rnr) {
             this.position = this.register[rnr];
+        },
+        assembly: 'B R([0-3])',
+        compile: function (rnr) {
+            return '0001' + dec2bin(rnr, 2) + '0000000000';
         }
     },
     'BZD': {
@@ -224,6 +296,10 @@ var INSTRUCTIONS = {
             if (this.register[0] == 0) {
                 this.position = addr;
             }
+        },
+        assembly: 'BZD #([0-9]{1,4})',
+        compile: function (addr) {
+            return '001100' + dec2bin(addr, 10);
         }
     },
     'BNZD': {
@@ -235,6 +311,10 @@ var INSTRUCTIONS = {
             if (this.register[0] != 0) {
                 this.position = addr;
             }
+        },
+        assembly: 'BNZD #([0-9]{1,4})',
+        compile: function (addr) {
+            return '001010' + dec2bin(addr, 10);
         }
     },
     'BCD': {
@@ -246,6 +326,10 @@ var INSTRUCTIONS = {
             if (this.carry == 1) {
                 this.position = addr;
             }
+        },
+        assembly: 'BCD #([0-9]{1,4})',
+        compile: function (addr) {
+            return '001110' + dec2bin(addr, 10);
         }
     },
     'BD': {
@@ -255,58 +339,13 @@ var INSTRUCTIONS = {
         },
         execute: function (addr) {
             this.position = addr;
+        },
+        assembly: 'BD #([0-9]{1,4})',
+        compile: function (addr) {
+            return '001000' + dec2bin(addr, 10);
         }
     }
 };
-
-function parseBin(memory, input, offset) {
-    
-    input = input.replace(/[^01]*/g, '');
-    
-    if (input.length % 16 != 0) {
-        return false; // invalid input
-    }
-    
-    for (var i = 0; i < (input.length / 8); i++) {
-        memory[i + offset] = input.slice(i*8, (i+1)*8);
-    }
-    
-    return memory;
-}
-
-function parseHex(memory, input, offset) {
-    
-    input = input.replace(/[^0-9A-F]*/g, '');
-    
-    if (input.length % 4 != 0) {
-        return false; // invalid input
-    }
-    
-    for (var i = 0; i < (input.length / 2); i++) {
-        memory[i + offset] = hex2bin(input.slice(i*2, (i+1)*2), 8);
-    }
-    
-    return memory;
-}
-
-function parseDec(memory, input, offset) {
-    
-    input = input.split(/[^0-9-]/g);
-    
-    var n = 0;
-    var bits = '';
-    
-    for (var i = 0; i < input.length; i++) {
-        
-        n = parseInt(input[i]);
-        bits = dec2bin(n);
-        
-        memory[i*2 + offset] = bits.slice(0, 8);
-        memory[i*2 + offset + 1] = bits.slice(8, 16);
-    }
-    
-    return memory;
-}
 
 function bin2dec(n) {
     n = parseInt(n, 2);
@@ -319,7 +358,7 @@ function bin2dec(n) {
 function dec2bin(n, padding) {
     
     var bin = (n < 0 ? (0xFFFF + n + 1) : n).toString(2);
-    
+
     padding = typeof (padding) === 'undefined' || padding === null ? padding = 16 : padding;
     
     while (bin.length < padding) {
@@ -336,304 +375,16 @@ function hex2bin(n, padding) {
     return dec2bin(n, padding);
 }
 
+function trim(string) {
+    return string.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+}
+
 var CPU = function () {
-    
+
     this.reset();
     
     var i = 100;
     this.memory = this.empty();
-    
-    // 100 add extended sign into #508
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110110'; // LWDD R0, #502
-    
-    // 102
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
-    // 104
-    this.memory[i++] = '00111000';
-    this.memory[i++] = '01101100'; // BCD #108
-    
-    // 106
-    this.memory[i++] = '00100000';
-    this.memory[i++] = '01110010'; // BD #114
-    
-    // 108
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 110
-    this.memory[i++] = '00000001';
-    this.memory[i++] = '00000000'; // INC
-    
-    // 112
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111100'; // SWDD R0, #508
-    
-    // 114 add second extended sign into #514
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110100'; // LWDD R0, #500
-    
-    // 116
-    this.memory[i++] = '00001100';
-    this.memory[i++] = '00000000'; // SLL
-    
-    // 118
-    this.memory[i++] = '00111000';
-    this.memory[i++] = '01111010'; // BCD #122
-    
-    // 120
-    this.memory[i++] = '00100000';
-    this.memory[i++] = '10000000'; // BD #128
-    
-    // 122
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 124
-    this.memory[i++] = '00000001';
-    this.memory[i++] = '00000000'; // INC
-    
-    // 126
-    this.memory[i++] = '01100010';
-    this.memory[i++] = '00000010'; // SWDD R0, #514
-    
-    // 128 init countdown
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 130
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000'; // NOT
-    
-    // 132
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111110'; // SWDD R0, #510
-    
-    // 134 init 10000000 00000000
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 136
-    this.memory[i++] = '11111111';
-    this.memory[i++] = '11111111'; // ADDD #MAX
-    
-    // 138
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000'; // NOT
-    
-    // 140
-    this.memory[i++] = '01100010';
-    this.memory[i++] = '00000000'; // SWDD R0, #512
-    
-    // 142
-    this.memory[i++] = '01001010';
-    this.memory[i++] = '00000000'; // LWDD R2, #512
-    
-    
-    // 144 add particial product
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11110110'; // LWDD R0 #502
-    
-    // 146
-    this.memory[i++] = '01000101';
-    this.memory[i++] = '11110100'; // LWDD R1, #500
-    
-    // 148
-    this.memory[i++] = '00001001';
-    this.memory[i++] = '00000000'; // SRL
-    
-    // 150
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11110110'; // SWDD R0, #502
-    
-    // 152
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111000'; // LWDD R0, #504
-    
-    // 154
-    this.memory[i++] = '00111000';
-    this.memory[i++] = '10011110'; // BCD #158
-    
-    // 156
-    this.memory[i++] = '00100000';
-    this.memory[i++] = '10100000'; // BD #160
-    
-    // 158
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '10000000'; // ADD R1
-    
-    // 160
-    this.memory[i++] = '00001001';
-    this.memory[i++] = '00000000'; // SRL
-    
-    // 162
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD R0, #504
-    
-    // 164 keep sign
-    this.memory[i++] = '01000010';
-    this.memory[i++] = '00000010'; // LWDD R0, #514
-    
-    // 166
-    this.memory[i++] = '00110000';
-    this.memory[i++] = '10101110'; // BZD #174
-    
-    // 168
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111000'; // LWDD R0, #504
-    
-    // 170
-    this.memory[i++] = '00001011';
-    this.memory[i++] = '00000000'; // OR R2
-//    this.memory[i++] = '00000010';
-//    this.memory[i++] = '00000000'; // NOTHING
-    
-    // 172
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD R0, #504
-    
-    // 174 process lower bits
-    this.memory[i++] = '00111000';
-    this.memory[i++] = '10110110'; // BCD #182
-    
-    // 176
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111010'; // LWDD R0, #506
-    
-    // 178
-    this.memory[i++] = '00001001';
-    this.memory[i++] = '00000000'; // SRL
-    
-    // 180
-    this.memory[i++] = '00100000';
-    this.memory[i++] = '10111100'; // BD #188
-    
-    // 182
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111010'; // LWDD R0, #506
-    
-    // 184
-    this.memory[i++] = '00001001';
-    this.memory[i++] = '00000000'; // SRL
-    
-    // 186
-    this.memory[i++] = '00001011';
-    this.memory[i++] = '00000000'; // OR R2
-    
-    // 188
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111010'; // SWDD R0, #506
-    
-    // 190 lower countdown
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111110'; // LWDD R0, #510
-    
-    // 192
-    this.memory[i++] = '00001001';
-    this.memory[i++] = '00000000'; // SRL
-    
-    // 194
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111110'; // SWDD R0, #510
-    
-    // 196 loop
-    this.memory[i++] = '00101000';
-    this.memory[i++] = '10010000'; // BNZD #144
-    
-    
-    
-    // 198 check extended sign
-    this.memory[i++] = '01000001';
-    this.memory[i++] = '11111100'; // LWDD R0, #508
-    
-    // 200
-    this.memory[i++] = '00110000';
-    this.memory[i++] = '11011100'; // BZD #220
-    
-    // 202
-    this.memory[i++] = '01000010';
-    this.memory[i++] = '00000010'; // LWDD R0, #514
-    
-    // 204
-    this.memory[i++] = '00110000';
-    this.memory[i++] = '11111010'; // BZD #250
-    
-    // 206
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 208
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '10000000'; // ADD R1
-    
-    // 210
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000'; // NOT
-    
-    // 212
-    this.memory[i++] = '00000001';
-    this.memory[i++] = '00000000'; // INC
-    
-    // 214
-    this.memory[i++] = '01000101';
-    this.memory[i++] = '11111000'; // LWDD R1, #504
-    
-    // 216
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '10000000'; // ADD R1
-    
-    // 218
-    this.memory[i++] = '00100000';
-    this.memory[i++] = '11100100'; // BD #228
-    
-    // 220
-    this.memory[i++] = '01000010';
-    this.memory[i++] = '00000010'; // LWDD R0, #514
-    
-    // 222
-    this.memory[i++] = '00110000';
-    this.memory[i++] = '11111010'; // BZD #250
-    
-    // 206
-    this.memory[i++] = '00000010';
-    this.memory[i++] = '10000000'; // CLR R0
-    
-    // 208
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '10000000'; // ADD R1
-    
-    // 210
-    this.memory[i++] = '00000000';
-    this.memory[i++] = '10000000'; // NOT
-    
-    // 212
-    this.memory[i++] = '00000001';
-    this.memory[i++] = '00000000'; // INC
-    
-    // 208
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '10000000'; // ADD R1
-    
-    // 224
-    this.memory[i++] = '01000101';
-    this.memory[i++] = '11111000'; // LWDD R1, #504
-    
-    // 208
-    this.memory[i++] = '00000111';
-    this.memory[i++] = '10000000'; // ADD R1
-    
-    // 228
-    this.memory[i++] = '01100001';
-    this.memory[i++] = '11111000'; // SWDD R0, #504
-    
-    i = 250;
-    
-    
-    
-    
-    
     
     var i = 500;
     
@@ -672,7 +423,177 @@ var CPU = function () {
     /*this.memory[i++] = '11111111';
     this.memory[i++] = '11111110';//-2*/
     
+    
+//    this.memory = this.empty();
+//    var string = '';
+//    for (var name in INSTRUCTIONS) {
+//        
+//        var instruction = INSTRUCTIONS[name];
+//
+//        string += instruction.optcode.call(this, 2, 974) + '\n';
+//    }
+//    this.parseAssembly(string, 100);
+    
+    
+    var multi = [
+        '100 LWDD R0, #502', // add extended sign into #508
+        '102 SLL',
+        '104 BCD #108',
+        '106 BD #114',
+        '108 CLR R0',
+        '110 INC',
+        '112 SWDD R0, #508',
+        '114 LWDD R0, #500', // add second extended sign into #514
+        '116 SLL',
+        '118 BCD #122',
+        '120 BD #128',
+        '122 CLR R0',
+        '124 INC',
+        '126 SWDD R0, #514',
+        '128 CLR R0',
+        '130 NOT',
+        '132 SWDD R0, #510',
+        '134 CLR R0',
+        '136 ADDD #32767',
+        '138 NOT',
+        '140 SWDD R0, #512',
+        '142 LWDD R2, #512',
+        '144 LWDD R0, #502', // add particial product
+        '146 LWDD R1, #500',
+        '148 SRL',
+        '150 SWDD R0, #502',
+        '152 LWDD R0, #504',
+        '154 BCD #158',
+        '156 BD #160',
+        '158 ADD R1',
+        '160 SRL',
+        '162 SWDD R0, #504',
+        '164 LWDD R0, #514',
+        '166 BZD #174',
+        '168 LWDD R0, #504',
+        '170 OR R2',
+        '172 SWDD R0, #504',
+        '174 BCD #182', // process lower bits
+        '176 LWDD R0, #506',
+        '178 SRL',
+        '180 BD #188',
+        '182 LWDD R0, #506',
+        '184 SRL',
+        '186 OR R2',
+        '188 SWDD R0, #506',
+        '190 LWDD R0, #510', // lower countdown
+        '192 SRL',
+        '194 SWDD R0, #510',
+        '196 BNZD #144',
+        '198 LWDD R0, #508', // check extended sign
+        '200 BZD #220',
+        '202 LWDD R0, #514',
+        '204 BZD #250',
+        '206 CLR R0',
+        '208 ADD R1',
+        '210 NOT',
+        '212 INC',
+        '214 LWDD R1, #504',
+        '216 ADD R1',
+        '218 BD #228',
+        '220 LWDD R0, #514',
+        '222 BZD #250',
+        '224 CLR R0',
+        '226 ADD R1',
+        '228 NOT',
+        '230 INC',
+        '232 ADD R1',
+        '234 LWDD R1, #504',
+        '236 ADD R1',
+        '238 SWDD R0, #504'
+    ];
+    
+    this.parseAssembly(multi.join('\n'), 100);
+    
     this.display();
+};
+
+CPU.prototype.compile = function (code) {
+        
+    for (var name in INSTRUCTIONS) {
+        
+        var instruction = INSTRUCTIONS[name];
+        
+        // check if regex matches
+        var match = code.match(instruction.assembly);
+        if (match != null) {
+        
+            var args = match.slice(1);
+            for (var i in args) {
+                args[i] = parseInt(args[i]);
+            }
+            
+            return instruction.compile.apply(null, args);
+        }
+    }
+    
+    // STOP
+    return '0000000000000000';
+};
+
+CPU.prototype.parseAssembly = function (input, offset) {
+    
+    input = trim(input).split('\n');
+    
+    for (var i in input) {
+        
+        var line = trim(input[i]);
+        var match = line.match('([0-9]{1,3})? *(.*)');
+        if (match) {
+            var bits = this.compile(match[2]);
+            var position = match[1] ? parseInt(match[1]) : parseInt(i) * 2 + offset;
+            this.memory[position] = bits.slice(0, 8);
+            this.memory[position + 1] = bits.slice(8, 16);
+        }
+    }
+};
+
+CPU.prototype.parseBin = function (input, offset) {
+    
+    input = input.replace(/[^01]*/g, '');
+    
+    if (input.length % 16 != 0) {
+        return false; // invalid input
+    }
+    
+    for (var i = 0; i < (input.length / 8); i++) {
+        this.memory[i + offset] = input.slice(i*8, (i+1)*8);
+    }
+};
+
+CPU.prototype.parseHex = function (input, offset) {
+    
+    input = input.replace(/[^0-9A-F]*/g, '');
+    
+    if (input.length % 4 != 0) {
+        return false; // invalid input
+    }
+    
+    for (var i = 0; i < (input.length / 2); i++) {
+        this.memory[i + offset] = hex2bin(input.slice(i*2, (i+1)*2), 8);
+    }
+};
+
+CPU.prototype.parseDec = function (input, offset) {
+    
+    input = input.split(/[^0-9-]/g);
+    
+    var n = 0;
+    var bits = '';
+    
+    for (var i = 0; i < input.length; i++) {
+        
+        n = parseInt(input[i]);
+        bits = dec2bin(n);
+        
+        this.memory[i*2 + offset] = bits.slice(0, 8);
+        this.memory[i*2 + offset + 1] = bits.slice(8, 16);
+    }
 };
 
 CPU.prototype.fast = function () {
@@ -712,9 +633,15 @@ CPU.prototype.step = function () {
     var instruction = this.decode(position);
     var stop = instruction.execute();
     
-    console.log(position+ ': ' + instruction.optcode() + ' (Carry: ' + this.carry + ')');
-    
-    this.count++;
+    if (stop) {
+        
+        this.position = position;
+        
+    } else {
+        
+        console.log(position + ': ' + instruction.optcode() + ' (Carry: ' + this.carry + ')');
+        this.count++;
+    }
     
     return stop;
 };
@@ -723,7 +650,7 @@ CPU.prototype.decode = function (position) {
     
     var bits = this.memory[position] + this.memory[position + 1];
     
-    for (name in INSTRUCTIONS) {
+    for (var name in INSTRUCTIONS) {
         
         var instruction = INSTRUCTIONS[name];
         
@@ -733,7 +660,7 @@ CPU.prototype.decode = function (position) {
             
             // convert to decimal
             var args = match.slice(1);
-            for (i in args) {
+            for (var i in args) {
                 args[i] = bin2dec(args[i]);
             }
             
@@ -784,39 +711,34 @@ CPU.prototype.empty = function () {
 
 CPU.prototype.loadInstructions = function (empty, converter) {
     
-    var memory = this.memory;
-    for (var i = 100; i < 500; i++) {
-        memory[i] = '00000000';
-    }
-
     var instructions = prompt('Please paste instructions:', empty);
-    memory = converter(memory, instructions, 100);
-
-    if (instructions) {
-        this.memory = memory;
-    }
     
-    this.display();
+    if (instructions) {
+        
+        for (var i = 100; i < 500; i++) {
+            this.memory[i] = '00000000';
+        }
+        
+        converter.call(this, instructions, 100);
+        
+        this.display();
+    }
 };
 
 CPU.prototype.loadMemory = function (empty, converter) {
-
-    var memory = this.empty();
-    var memory = this.memory;
-    for (var i = 500; i < 530; i++) {
-        memory[i] = '00000000';
-    }
-
-    var input = prompt('Please paste input:', empty);
-    memory = converter(memory, input, 500);
     
-    if (memory) {
+    var input = prompt('Please paste input:', empty);
+    
+    if (input) {
         
-        this.memory = memory;
+        for (var i = 500; i < 530; i++) {
+            this.memory[i] = '00000000';
+        }
         
+        converter.call(this, input, 500);
+    
+        this.display();
     }
-
-    this.display();
 };
 
 CPU.prototype.display = function () {
@@ -825,7 +747,11 @@ CPU.prototype.display = function () {
     $('.info li').text(this.count);
 
     // Decoded Instruction
-    $('.decoded li').html('<em>' + this.position + '</em> ' + this.decode(this.position).optcode());
+    var instruction = this.decode(this.position).optcode();
+    if (!instruction) {
+        instruction = 'STOP';
+    }
+    $('.decoded li').html('<em>' + this.position + '</em> ' + instruction);
 
     // Register
     $('.register .values').empty();

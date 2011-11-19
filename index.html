@@ -13,33 +13,38 @@
 		    
 		    var cpu = new CPU();
 		    
+		    $('.instructions .command-load.assembly').on('click', function () {
+		        cpu.loadInstructions('100 ADDD #255', cpu.parseAssembly);
+		        return false;
+		    });
+		    
 		    $('.instructions .command-load.binary').on('click', function () {
-		        cpu.loadInstructions('00000000 00000000', parseBin);
+		        cpu.loadInstructions('00000000 00000000', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.hex').on('click', function () {
-		        cpu.loadInstructions("FF FF", parseHex);
+		        cpu.loadInstructions("FF FF", cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.dec').on('click', function () {
-		        cpu.loadInstructions('0', parseDec);
+		        cpu.loadInstructions('0', cpu.parseDec);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.binary').on('click', function () {
-		        cpu.loadMemory('00000000 00000000', parseBin);
+		        cpu.loadMemory('00000000 00000000', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.hex').on('click', function () {
-		        cpu.loadMemory("FF FF", parseHex);
+		        cpu.loadMemory("FF FF", cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.dec').on('click', function () {
-		        cpu.loadMemory('0', parseDec);
+		        cpu.loadMemory('0', cpu.parseDec);
 		        return false;
 		    });
 		    
@@ -98,7 +103,7 @@
     
     <div class="right">
         <div class="block instructions">
-            <h2>Instructions (Load <a href="#" class="command-load binary">Binary</a>, <a href="#" class="command-load dec">Dec</a>, <a href="#" class="command-load hex">Hex</a>)</h2>
+            <h2>Instructions (Load <a href="#" class="command-load assembly">Code</a>, <a href="#" class="command-load binary">Binary</a>, <a href="#" class="command-load dec">Dec</a>, <a href="#" class="command-load hex">Hex</a>)</h2>
             <ul class="values">
                 <li><em>120</em> 0010101111101100 0010101111101100 <em>LWD R3, #40</em></li>
                 <li class="active"><em>122</em> 0010101111101100 0010101111101100 <em>CLR R0</em></li>

@@ -75,12 +75,16 @@ body {
     font-family: "Andale Mono", monospace;
 }
 
-.block.info .values {
-    height: 45px;
+.block.decoded .values {
+    height: 15px;
 }
 
 .block.register .values {
-    height: 60px;
+    height: 65px;
+}
+
+.block.info .values {
+    height: 30px;
 }
 
 .block.instructions .values {
