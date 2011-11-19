@@ -17,6 +17,7 @@
                 
     		    $('.overlay .values').val(empty);
     		    $('.overlay').show();
+    		    $('.overlay .values').focus().select();
     		    
     		    var that =this;
     		    $('.overlay .apply').one('click', function() {
@@ -29,37 +30,37 @@
 		    }
 		    
 		    $('.instructions .command-load.assembly').on('click', function () {
-		        load(100, '100 ADDD #255\n102 NOT', cpu.parseAssembly);
+		        load(100, '100 ADDD #255\n102 NOT\n', cpu.parseAssembly);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.binary').on('click', function () {
-		        load(100, '1000000011111111\n0000000010000000', cpu.parseBin);
+		        load(100, '1000000011111111\n0000000010000000\n', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.hex').on('click', function () {
-		        load(100, '80 FF\n00 80', cpu.parseHex);
+		        load(100, '80 FF\n00 80\n', cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.dec').on('click', function () {
-		        load(100, '33023\n128', cpu.parseDec);
+		        load(100, '33023\n128\n', cpu.parseDec);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.binary').on('click', function () {
-		        load(500, '1111111111111011\n0000000000000011', cpu.parseBin);
+		        load(500, '1111111111111011\n0000000000000011\n', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.hex').on('click', function () {
-		        load(500, 'FF FB\n00 03', cpu.parseHex);
+		        load(500, 'FF FB\n00 03\n', cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.dec').on('click', function () {
-		        load(500, '-5\n3', cpu.parseDec);
+		        load(500, '-5\n3\n', cpu.parseDec);
 		        return false;
 		    });
 		    
