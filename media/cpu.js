@@ -18,7 +18,57 @@ var INSTRUCTIONS = {
             return 'ADD R' + rnr;
         },
         execute: function (rnr) {
-            this.register[0] += this.register[rnr];
+            var bits1 = dec2bin(this.register[0]);
+            var bits2 = dec2bin(this.register[rnr]);
+            
+            var r = '';
+            var carry = '0';
+            var into = '0';
+            var result = '';
+            for (var i = bits1.length; i > 0; i--) {
+                
+                var a = bits1.slice(i - 1, i);
+                var b = bits2.slice(i - 1, i);
+                into = carry;
+                
+                switch (true) {
+                    case a == '1' && b == '1' && carry == '0':
+                        r = '0';
+                        carry = '1';
+                        break;
+                    case a == '1' && b == '1' && carry == '1':
+                        r = '1';
+                        carry = '1';
+                        break;
+                    case (a == '1' || b == '1') && carry == '1':
+                        r = '0';
+                        carry = '1';
+                        break;
+                    case (a == '1' || b == '1') && carry == '0':
+                        r = '1';
+                        carry = '0';
+                        break;
+                    case carry == '1':
+                        r = '1';
+                        carry = '0';
+                        break;
+                    default:
+                        r = '0';
+                        carry = '0';
+                        break;
+                }
+                
+                result = r + result;
+            }
+            
+            // detect overflow
+            if (carry != into) {
+                this.carry = 1;
+            } else {
+                this.carry = 0;
+            }
+            
+            this.register[0] = bin2dec(result);
         },
         assembly: 'ADD R([0-3])',
         compile: function (rnr) {
