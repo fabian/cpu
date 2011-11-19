@@ -709,36 +709,15 @@ CPU.prototype.empty = function () {
     return memory;
 };
 
-CPU.prototype.loadInstructions = function (empty, converter) {
+CPU.prototype.load = function (from, values, converter) {
     
-    var instructions = prompt('Please paste instructions:', empty);
-    
-    if (instructions) {
-        
-        for (var i = 100; i < 500; i++) {
-            this.memory[i] = '00000000';
-        }
-        
-        converter.call(this, instructions, 100);
-        
-        this.display();
+    for (var i = from; i < from + 400; i++) {
+        this.memory[i] = '00000000';
     }
-};
+    
+    converter.call(this, values, from);
 
-CPU.prototype.loadMemory = function (empty, converter) {
-    
-    var input = prompt('Please paste input:', empty);
-    
-    if (input) {
-        
-        for (var i = 500; i < 530; i++) {
-            this.memory[i] = '00000000';
-        }
-        
-        converter.call(this, input, 500);
-    
-        this.display();
-    }
+    this.display();
 };
 
 CPU.prototype.display = function () {
@@ -766,7 +745,7 @@ CPU.prototype.display = function () {
     $('.instructions .values').empty();
     for (var i = 100; i < 500; i += 2) {
         
-        var li = $('<li><em>' + i + '</em> ' + this.memory[i] + ' ' + this.memory[i+1] + ' <em>' + this.decode(i).optcode() + '</em></li>');
+        var li = $('<li><em>' + i + '</em> ' + this.memory[i] + this.memory[i+1] + ' <em>' + this.decode(i).optcode() + '</em></li>');
         
         if (i == this.position) {
             li.addClass('active');
@@ -778,7 +757,7 @@ CPU.prototype.display = function () {
     // instructions
     $('.memory .values').empty();
     for (var i = 500; i < 530; i += 2) {
-        $('.memory .values').append('<li><em>' + i + '</em> ' + this.memory[i] + ' ' + this.memory[i+1] + ' <em>' + bin2dec(this.memory[i] + this.memory[i+1]) + '</em></li>');
+        $('.memory .values').append('<li><em>' + i + '</em> ' + this.memory[i] + this.memory[i+1] + ' <em>' + bin2dec(this.memory[i] + this.memory[i+1]) + '</em></li>');
     }
 };
 

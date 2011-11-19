@@ -13,38 +13,53 @@
 		    
 		    var cpu = new CPU();
 		    
+		    function load(from, empty, converter) {
+                
+    		    $('.overlay .values').val(empty);
+    		    $('.overlay').show();
+    		    
+    		    var that =this;
+    		    $('.overlay .apply').one('click', function() {
+    		    
+    		        var values = $('.overlay .values').val();
+    		        cpu.load(from, values, converter);
+    		        
+    		        $('.overlay').hide();
+    		    });
+		    }
+		    
 		    $('.instructions .command-load.assembly').on('click', function () {
-		        cpu.loadInstructions('100 ADDD #255', cpu.parseAssembly);
+		        load(100, '100 ADDD #255\n102 NOT', cpu.parseAssembly);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.binary').on('click', function () {
-		        cpu.loadInstructions('00000000 00000000', cpu.parseBin);
+		        load(100, '1000000011111111\n0000000010000000', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.hex').on('click', function () {
-		        cpu.loadInstructions("FF FF", cpu.parseHex);
+		        load(100, '80 FF\n00 80', cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.instructions .command-load.dec').on('click', function () {
-		        cpu.loadInstructions('0', cpu.parseDec);
+		        load(100, '33023\n128', cpu.parseDec);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.binary').on('click', function () {
-		        cpu.loadMemory('00000000 00000000', cpu.parseBin);
+		        load(500, '1111111111111011\n0000000000000011', cpu.parseBin);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.hex').on('click', function () {
-		        cpu.loadMemory("FF FF", cpu.parseHex);
+		        load(500, 'FF FB\n00 03', cpu.parseHex);
 		        return false;
 		    });
 		    
 		    $('.memory .command-load.dec').on('click', function () {
-		        cpu.loadMemory('0', cpu.parseDec);
+		        load(500, '-5\n3', cpu.parseDec);
 		        return false;
 		    });
 		    
@@ -64,10 +79,22 @@
 		        $('.instructions .values').scrollTop((cpu.position - 101) * 5);
 		        return false;
 		    });
+		    
+		    $('.overlay .cancel').on('click', function() {
+		        $('.overlay').hide();
+		    });
 		});
 	</script>
 </head>
 <body>
+
+<div class="overlay">
+    <textarea class="values"></textarea>
+    <div class="buttons">
+        <input type="button" value="Cancel" class="cancel" />
+        <input type="button" value="Load Input" class="apply" />
+    </div>
+</div>
 
 <div class="cpu">
     
@@ -103,7 +130,7 @@
     
     <div class="right">
         <div class="block instructions">
-            <h2>Instructions (Load <a href="#" class="command-load assembly">Code</a>, <a href="#" class="command-load binary">Binary</a>, <a href="#" class="command-load dec">Dec</a>, <a href="#" class="command-load hex">Hex</a>)</h2>
+            <h2>Instructions (Load <a href="#" class="command-load assembly">Assembly</a>, <a href="#" class="command-load binary">Binary</a>, <a href="#" class="command-load dec">Dec</a>, <a href="#" class="command-load hex">Hex</a>)</h2>
             <ul class="values">
                 <li><em>120</em> 0010101111101100 0010101111101100 <em>LWD R3, #40</em></li>
                 <li class="active"><em>122</em> 0010101111101100 0010101111101100 <em>CLR R0</em></li>
