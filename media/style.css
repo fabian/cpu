@@ -13,6 +13,40 @@ body {
 	background-repeat: no-repeat;
 }
 
+.overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);   
+}
+
+.overlay textarea.values {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    font-family: monospace;
+    margin-left: -200px;
+    margin-top: -200px;
+}
+
+.overlay .buttons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 220px;
+    margin-left: -200px;
+    width: 400px;
+    text-align: right;
+}
+
+.overlay input.apply {
+    font-weight: bold;
+}
 
 .cpu {
 	position: absolute;
@@ -49,7 +83,7 @@ body {
 .right {
     position: absolute;
     top: 45px;
-    right: 2px;
+    right: 0;
 }
 
 .block {
@@ -58,7 +92,7 @@ body {
 }
 
 .block .titles {
-    width: 130px;
+    width: 110px;
     float: left;
 }
 
@@ -68,20 +102,23 @@ body {
 
 .block .values {
 	overflow: auto;
-	width: 255px;
+	width: 260px;
 }
 
 .values li {
     font-family: "Andale Mono", monospace;
 }
 
-.block.info .values {
-    width: 40px;
-    height: 45px;
+.block.decoded .values {
+    height: 15px;
 }
 
 .block.register .values {
-    height: 60px;
+    height: 65px;
+}
+
+.block.info .values {
+    height: 30px;
 }
 
 .block.instructions .values {
