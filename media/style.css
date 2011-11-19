@@ -137,9 +137,9 @@ body {
     position: absolute;
     bottom: 10px;
     left: 50%;
-    width: 200px;
+    width: 400px;
     text-align: center;
-    margin-left: -100px;
+    margin-left: -200px;
 }
 
 .footer,
